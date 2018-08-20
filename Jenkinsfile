@@ -1,9 +1,6 @@
 #!/usr/bin/env groovy
 pipeline {
   
-environment{
-	CF_DOCKER_PASSWORD="$dockerhubpwd"
-}
 agent any 
 
 
@@ -14,25 +11,17 @@ agent any
 		steps{
 		script {
 		git credentialsId: 'e0c038d8-5106-4d22-87e5-16b018816ef7', url: 'https://github.com/jvaibhav123/cloudfoundry.git'
-		env.BUILD_TAG=v13
 		}
 	   }	
 	}
 	
 	
-	stage('Build Plus Push')
+	stage('Build ')
 	{
-	  when{
-		expression {
-				return "$BUILD_TAG"!=""
-		}
-	}
 	  steps{
 	  
 	  script {
 		withCredentials([usernamePassword(credentialsId: 'dockkerhub', passwordVariable: 'DOCKERPWD', usernameVariable: 'DOCKERUSER')]) {
-		echo "Build tag ${BUILD_TAG}"
-		if ("${BUILD_TAG}" != ""){
 		stage('Build Docker image')
 		{
 			sh """
@@ -44,13 +33,11 @@ agent any
 			"""
 			
 		}
+	}
+
+}
 			
 		 stage('Test the image'){
-		  when{
-                	expression {
-                                return "$BUILD_TAG"!=""
-                }
-        }
 
 		   def testImageExist
                    sh """
@@ -87,34 +74,12 @@ agent any
                  }
 	
 
-		 stage('Push to docker hub'){
-		  when{
-                expression {
-                                return "$BUILD_TAG"!=""
-                }
-        }
-
-		 sh """
-		docker login --username $DOCKERUSER --password $DOCKERPWD
-		echo "Docker login successful"
-		 echo "Push docker image"
-		 docker push $DOCKERUSER/demoapp:${BUILD_TAG}
-		 echo "Push completed successfully"
-		 """
-		 }
-		 
-		 
 		 stage('Deploy the image'){
-		  when{
-                expression {
-                                return "$BUILD_TAG"!=""
-                  }
-        	}
 
 		 pushToCloudFoundry cloudSpace: 'pcfdev-space', credentialsId: 'cloudfoundry', organization: 'pcfdev-org', selfSigned: 'true', target: 'api.local.pcfdev.io'
 		 sh """
-
-		 cf push --docker-image docker200037/demoapp:$BUILD_TAG 
+		 cd app
+		 cf push 
 		 """		 
  
 		 }

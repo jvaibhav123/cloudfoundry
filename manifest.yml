@@ -1,8 +1,0 @@
----
-applications:
-- name: python_app
-  memory: 50M
-  instances: 1 
-  docker:
-    image: docker200037/demoapp:v13
-    username: docker200037

@@ -14,4 +14,4 @@ def hello():
 	return "If you are reading this, the second deployment has worked! You're random integer is " + str(numbers) + ". Click refresh for a new one."
 
 if __name__ == '__main__':
-	app.run()
+	app.run(host='0.0.0.0', port=8080)
