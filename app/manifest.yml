@@ -3,6 +3,9 @@ applications:
 - name: pythonapp
   memory: 150M
   instances: 1
-  build_pack: python_buildpack
-  command: python hello.py
+  #build_pack: python_buildpack
+  #command: python hello.py
+  docker:
+    image: docker200037/demoapp:$BUILD_TAG
+    username: docker200037
 
