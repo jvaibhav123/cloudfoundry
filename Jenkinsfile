@@ -2,7 +2,7 @@
 pipeline {
   
 environment{
-	CF_DOCKER_PASSWORD=$dockerhubpwd
+	CF_DOCKER_PASSWORD="$dockerhubpwd"
 }
 agent any 
 
