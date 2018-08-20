@@ -5,4 +5,4 @@ applications:
   instances: 1 
   docker:
     image: docker200037/demoapp:v13
-    docker-username: docker200037
+    username: docker200037
