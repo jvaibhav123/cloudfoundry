@@ -1,5 +1,5 @@
 ---
 applications:
 - name: python_app
-  memory: 512M
+  memory: 50M
   instances: 2
