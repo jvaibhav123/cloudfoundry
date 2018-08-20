@@ -2,5 +2,8 @@
 applications:
 - name: python_app
   memory: 50M
-  instances: 2
+  instances: 1 
   buildpack: python_buildpack
+  docker:
+    image: docker200037/demoapp
+    docker-username: docker200037
