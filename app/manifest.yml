@@ -1,7 +1,7 @@
 ---
 applications:
 - name: pythonapp
-  memory: 150M
+  memory: 175M
   instances: 1
   #build_pack: python_buildpack
   #command: python hello.py
