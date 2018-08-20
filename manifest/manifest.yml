@@ -3,6 +3,7 @@ applications:
 - name: pythonapp
   memory: 175M
   instances: 1
+  buildpack: python_buildpack
   docker:
     image: docker200037/demoapp:v13
     username: docker200037
