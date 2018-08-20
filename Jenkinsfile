@@ -13,7 +13,7 @@ agent any
     stage('checkout') {
 		steps{
 		script {
-		git credentialsId: 'e0c038d8-5106-4d22-87e5-16b018816ef7', url: 'https://github.com/jvaibhav123/pythonapp.git'
+		git credentialsId: 'e0c038d8-5106-4d22-87e5-16b018816ef7', url: 'https://github.com/jvaibhav123/cloudfoundry.git'
 		env.BUILD_TAG=v13
 		}
 	   }	
