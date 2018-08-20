@@ -3,3 +3,4 @@ applications:
 - name: python_app
   memory: 50M
   instances: 2
+  buildpack: python_buildpack
