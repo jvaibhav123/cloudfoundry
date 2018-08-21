@@ -2,6 +2,5 @@
 applications:
 - name: myapp2
   memory: 128MB
-  disk_quota: 256MB
   buildpack: python_buildpack
   command: python hello.py
