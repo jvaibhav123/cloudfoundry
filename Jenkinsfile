@@ -1,6 +1,10 @@
 #!/usr/bin/env groovy
 pipeline {
   
+  environment{
+      CF_DOCKER_PASSWORD="dockerhub123"
+  }
+
 agent any 
 
 
@@ -11,17 +15,20 @@ agent any
 		steps{
 		script {
 		git credentialsId: 'e0c038d8-5106-4d22-87e5-16b018816ef7', url: 'https://github.com/jvaibhav123/cloudfoundry.git'
+		
 		}
 	   }	
 	}
 	
 	
-	stage('Build ')
+	stage('Build Plus Push')
 	{
+	  
 	  steps{
 	  
 	  script {
-		withCredentials([usernamePassword(credentialsId: 'dockkerhub', passwordVariable: 'DOCKERPWD', usernameVariable: 'DOCKERUSER')]) {
+		withCredentials([usernamePassword(credentialsId: 'dockerhub', passwordVariable: 'DOCKERPWD', usernameVariable: 'DOCKERUSER')])  {
+	
 		stage('Build Docker image')
 		{
 			sh """
@@ -33,12 +40,15 @@ agent any
 			"""
 			
 		}
-	}
-
-}
-			
-		 stage('Test the image'){
-
+		
+		}
+	  }
+	  }
+	  }
+	 	 stage('Test the image'){
+		  steps{
+                script{
+                    	withCredentials([usernamePassword(credentialsId: 'dockerhub', passwordVariable: 'DOCKERPWD', usernameVariable: 'DOCKERUSER')])  {
 		   def testImageExist
                    sh """
 		   testImageExist=`docker ps --filter "name=test_image" -q | wc -l`
@@ -70,36 +80,36 @@ agent any
                    docker rm \$(docker ps -a --filter "name=test_image" -q )
                    """
 
-
+                    	}
                  }
-	
+            }
+            
+		 }
 
+		 
 		 stage('Deploy the image'){
-
-		 pushToCloudFoundry cloudSpace: 'pcfdev-space', credentialsId: 'cloudfoundry', organization: 'pcfdev-org', selfSigned: 'true', target: 'api.local.pcfdev.io'
-		 sh """
-		 cd app
-		 cf push 
-		 """		 
+		  
+		 steps{
+            
+        script {
+            sh """
+            ls app/
+            """
+            
+		 		 pushToCloudFoundry(
+  target: 'api.local.pcfdev.io',
+  organization: 'pcfdev-org',
+  cloudSpace: 'pcfdev-space',
+  credentialsId: 'cloudfoundry',
+  selfSigned: 'true',
+  manifestChoice: [manifestFile: 'app/manifest.yml'])
  
+		 		 }
+		 }
 		 }
 		  
-			
-		}
-		}
-
-	}
-	
-	}
-	
-	}
-	
-}
-
-
-
-}
-
-
-
+        }
+		 }
+		
+		
 
